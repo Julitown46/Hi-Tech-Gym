@@ -7,19 +7,19 @@ CREATE TABLE Usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    contraseña VARCHAR(255) NOT NULL,
-    rol ENUM('cliente', 'administrador') NOT NULL
+    contrasena VARCHAR(255) NOT NULL,
+    rol VARCHAR(50) NOT NULL DEFAULT 'usuario'
 );
 
 -- Crear la tabla Membresía
 CREATE TABLE Membresia (
     id_membresia INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT UNIQUE NOT NULL,
-    tipo ENUM('mensual', 'anual') NOT NULL,
+    tipo VARCHAR(50) NOT NULL DEFAULT 'mensual',
     precio DECIMAL(10,2) NOT NULL,
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
-    estado ENUM('activa', 'inactiva') NOT NULL DEFAULT 'activa',
+    estado VARCHAR(50) NOT NULL DEFAULT 'activa',
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE
 );
 
@@ -27,8 +27,8 @@ CREATE TABLE Membresia (
 CREATE TABLE Pista (
     id_pista INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
-    ubicación VARCHAR(100) NOT NULL,
-    estado ENUM('disponible', 'ocupada', 'mantenimiento') NOT NULL DEFAULT 'disponible'
+    ubicacion VARCHAR(100) NOT NULL,
+    estado VARCHAR(50) NOT NULL DEFAULT 'disponible'
 );
 
 -- Crear la tabla Reserva
@@ -37,8 +37,8 @@ CREATE TABLE Reserva (
     id_usuario INT NOT NULL,
     id_pista INT NOT NULL,
     fecha DATE NOT NULL,
-    hora TIME NOT NULL,
-    estado ENUM('confirmada', 'cancelada') NOT NULL DEFAULT 'confirmada',
+    hora TIME(0) NOT NULL,
+    estado VARCHAR(50) NOT NULL DEFAULT 'confirmada',
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_pista) REFERENCES Pista(id_pista) ON DELETE CASCADE
 );
@@ -48,9 +48,9 @@ CREATE TABLE Pago (
     id_pago INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     id_membresia INT NOT NULL,
-    monto DECIMAL(10,2) NOT NULL,
+    importe DECIMAL(10,2) NOT NULL,
     fecha DATE NOT NULL,
-    método ENUM('tarjeta', 'efectivo', 'PayPal') NOT NULL,
+    metodo VARCHAR(50) NOT NULL DEFAULT 'tarjeta',
     FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_membresia) REFERENCES Membresia(id_membresia) ON DELETE CASCADE
 );
