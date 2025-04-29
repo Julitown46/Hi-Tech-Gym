@@ -1,13 +1,11 @@
 from django.db import models
-
-# Create your models here.
-# reservas/models.py
 from django.db import models
 
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     membresia_activa = models.BooleanField(default=False)
+    rol = models.CharField(max_length=20, choices=[('admin', 'Admin'), ('usuario', 'Usuario')], default='usuario')
 
     def __str__(self):
         return self.nombre
