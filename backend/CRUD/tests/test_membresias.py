@@ -1,7 +1,6 @@
-# reservas/tests/test_membresias.py
 from django.test import TestCase
 from datetime import date, timedelta
-from CRUD.models import Usuario, Membresia, Pista
+from CRUD.models import Usuario, Membresia, Pista, Reserva
 from CRUD.serializers import ReservaSerializer
 
 class MembresiaTests(TestCase):

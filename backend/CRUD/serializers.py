@@ -45,7 +45,7 @@ class ReservaSerializer(serializers.ModelSerializer):
         model = Reserva
         fields = '__all__'
 
-        def validate(self, data):
+    def validate(self, data):
             usuario = data.get('usuario')
 
             hoy = date.today()
