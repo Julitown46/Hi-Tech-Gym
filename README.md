@@ -4,7 +4,7 @@
 Hi-Tech Gym
 
 ## Descripción
-Este proyecto es una plataforma web desarrollada con **Spring Boot, JPA, SQL y Angular** que permite la gestión integral de un gimnasio, incluyendo la administración de usuarios, membresías y reservas de pistas de pádel.
+Este proyecto es una plataforma web desarrollada con **Python, Django, SQLite y Angular** que permite la gestión integral de un gimnasio, incluyendo la administración de usuarios, membresías y reservas de pistas de pádel.
 
 ## Objetivos
 - Facilitar la gestión de gimnasios mediante una solución digital eficiente.
@@ -13,9 +13,9 @@ Este proyecto es una plataforma web desarrollada con **Spring Boot, JPA, SQL y A
 - Proporcionar un panel de control para administradores con estadísticas.
 
 ## Tecnologías Utilizadas
-- **Backend:** Spring Boot, JPA, Hibernate, MySQL
+- **Backend:** Python, Django
 - **Frontend:** Angular 19, Bootstrap
-- **Base de Datos:** MySQL
+- **Base de Datos:** SQLite
 - **Seguridad:** Spring Security (Autenticación y Autorización)
 
 ## Funcionalidades Principales
@@ -31,10 +31,10 @@ Este proyecto es una plataforma web desarrollada con **Spring Boot, JPA, SQL y A
 
 ## Requisitos
 ### Software Necesario
-- Java 17+
+- Python 3
 - Node.js y Angular CLI
-- MySQL Server
-- Spring Boot
+- SQLite
+- Django
 
 ### Configuración de la Base de Datos
 Ejecuta el siguiente script SQL para crear la base de datos y las tablas necesarias:
@@ -48,14 +48,15 @@ _(Para ver el script completo, revisa `DDBBHiTechGym.sql` en este repositorio)_
 ## Instalación y Ejecución
 ### 1. Clonar el repositorio
 ```sh
-git clone https://github.com/tu-usuario/sistema-gimnasio.git
-cd sistema-gimnasio
+git clone https://github.com/Julitown46/Hi-Tech-Gym.git
+cd Hi-Tech-Gym
 ```
 
-### 2. Configurar el Backend (Spring Boot)
+### 2. Configurar el Backend (Django)
 ```sh
 python -m venv venv
 venv\Scripts\activate
+python manage.py runserver
 ```
 
 ### 3. Configurar el Frontend (Angular)
@@ -67,7 +68,7 @@ ng serve
 
 ## Notas Importantes
 - Solo los usuarios con **membresía activa** pueden reservar pistas de pádel.
-- El sistema implementa validaciones tanto en el **backend (Spring Boot)** como en la **base de datos (Triggers en MySQL)**.
+- El sistema implementa validaciones tanto en el **backend (Django)** como en la **base de datos (Triggers en MySQL)**.
 - Se recomienda usar Postman para probar la API antes de integrar el frontend.
 
 ## Licencia
