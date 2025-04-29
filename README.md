@@ -54,9 +54,8 @@ cd sistema-gimnasio
 
 ### 2. Configurar el Backend (Spring Boot)
 ```sh
-cd backend
-mvn clean install
-mvn spring-boot:run
+python -m venv venv
+venv\Scripts\activate
 ```
 
 ### 3. Configurar el Frontend (Angular)
