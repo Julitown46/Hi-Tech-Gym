@@ -55,7 +55,10 @@ cd Hi-Tech-Gym
 ### 2. Configurar el Backend (Django)
 ```sh
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate (Windows)
+source venv/bin/activate (Linux)
+pip install django
+pip install django djangorestframework
 python manage.py runserver
 ```
 
