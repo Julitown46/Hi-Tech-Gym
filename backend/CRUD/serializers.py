@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, permissions, generics
 from .models import Usuario, Membresia, Pista, Reserva
 from datetime import date
 
@@ -6,7 +6,22 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = '__all__'
-        read_only_fields = ('email',)
+        read_only_fields = ('id',)
+
+class IsAdminUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.rol == 'admin'
+
+class CanCreateAdminUser(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'POST' and request.data.get('rol') == 'admin':
+            return request.user and request.user.is_authenticated and request.user.rol == 'admin'
+        return True
+
+class UsuarioCreateView(generics.CreateAPIView):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+    permission_classes = [permissions.IsAuthenticated, CanCreateAdminUser]
 
 class MembresiaSerializer(serializers.ModelSerializer):
     class Meta:
