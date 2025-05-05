@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers, permissions, generics
 from .models import Usuario, Membresia, Pista, Reserva
 from datetime import date
@@ -7,21 +8,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
         read_only_fields = ('id',)
-
-class IsAdminUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated and request.user.rol == 'admin'
-
-class CanCreateAdminUser(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.method == 'POST' and request.data.get('rol') == 'admin':
-            return request.user and request.user.is_authenticated and request.user.rol == 'admin'
-        return True
-
-class UsuarioCreateView(generics.CreateAPIView):
-    queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
-    permission_classes = [permissions.IsAuthenticated, CanCreateAdminUser]
 
 class MembresiaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,3 +60,24 @@ class ReservaSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("El usuario no tiene una membresía activa y vigente.")
 
             return data
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        if username and password:
+            user = authenticate(request=self.context.get('request'), username=username, password=password)
+            if user:
+                if not user.is_active:  # Asumiendo que tienes un campo is_active en tu modelo o quieres verificarlo
+                    raise serializers.ValidationError('La cuenta del usuario está desactivada.')
+                data['user'] = user
+            else:
+                raise serializers.ValidationError('Credenciales inválidas.')
+        else:
+            raise serializers.ValidationError('Debes incluir tanto el nombre de usuario como la contraseña.')
+
+        return data

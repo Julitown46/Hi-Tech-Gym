@@ -6,7 +6,7 @@ from CRUD.serializers import ReservaSerializer
 class MembresiaTests(TestCase):
 
     def setUp(self):
-        self.usuario = Usuario.objects.create(nombre="Juan", email="juan@mail.com")
+        self.usuario = Usuario.objects.create(username="Juan", email="juan@mail.com")
         self.pista = Pista.objects.create(nombre="Pista 1")
 
     def test_usuario_no_tiene_membresia_activa(self):
