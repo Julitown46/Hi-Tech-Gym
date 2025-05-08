@@ -72,7 +72,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return self.is_staff
 
 class Membresia(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='membresias')
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 
@@ -86,7 +86,7 @@ class Pista(models.Model):
         return self.nombre
 
 class Reserva(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='reservas')
     pista = models.ForeignKey(Pista, on_delete=models.CASCADE)
     fecha = models.DateField()
     hora = models.TimeField()
