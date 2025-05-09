@@ -8,10 +8,15 @@ from rest_framework import status
 from .serializers import LoginSerializer
 from django.contrib.auth import login
 
+
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [AdminReadOnlyPermission]  # Updated permission
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        return [AdminReadOnlyPermission()]  # Updated permission
 
 class MembresiaViewSet(viewsets.ModelViewSet):
     queryset = Membresia.objects.all()
