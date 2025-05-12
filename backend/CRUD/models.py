@@ -1,7 +1,9 @@
 from django.db import models
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from rest_framework.exceptions import ValidationError
+
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -59,6 +61,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        self.reservas.filter(estado='confirmada').update(estado='cancelada')
+        super().delete(*args, **kwargs)
+
     @property
     def is_anonymous(self):
         return False
@@ -72,25 +78,68 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return self.is_staff
 
 class Membresia(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='membresias')
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='membresias'
+    )
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
 
-    def __str__(self):
-        return f"Membresía de {self.usuario.username}"
+    def clean(self):
+        if self.fecha_inicio and self.fecha_fin:
+            if self.fecha_inicio > self.fecha_fin:
+                raise ValidationError('La fecha de inicio debe ser anterior a la fecha fin')
+            if self.fecha_inicio < timezone.now().date():
+                raise ValidationError('La fecha de inicio no puede ser en el pasado')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 class Pista(models.Model):
     nombre = models.CharField(max_length=100)
+    activa = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre
 
+    def delete(self, *args, **kwargs):
+        # Soft delete - en lugar de borrar, desactivamos
+        self.activa = False
+        self.save()
+
 class Reserva(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='reservas')
-    pista = models.ForeignKey(Pista, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='reservas'
+    )
+    pista = models.ForeignKey(
+        Pista,
+        on_delete=models.PROTECT,  # Evita borrado de pistas con reservas
+        limit_choices_to={'activa': True}
+    )
     fecha = models.DateField()
     hora = models.TimeField()
-    estado = models.CharField(max_length=20, choices=[('confirmada', 'Confirmada'), ('cancelada', 'Cancelada')])
+    estado = models.CharField(
+        max_length=20,
+        choices=[('confirmada', 'Confirmada'), ('cancelada', 'Cancelada')],
+        default='confirmada'
+    )
+
+    class Meta:
+        unique_together = ['pista', 'fecha', 'hora']
+
+    def clean(self):
+        if self.fecha < timezone.now().date():
+            raise ValidationError('No se pueden hacer reservas en fechas pasadas')
+        if not self.usuario.membresia_activa and self.estado == 'confirmada':
+            raise ValidationError('El usuario debe tener una membresía activa para reservar')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.fecha} {self.hora} - {self.usuario.username}"

@@ -72,7 +72,7 @@ class LoginSerializer(serializers.Serializer):
         if username and password:
             user = authenticate(request=self.context.get('request'), username=username, password=password)
             if user:
-                if not user.is_active:  # Asumiendo que tienes un campo is_active en tu modelo o quieres verificarlo
+                if not user.is_active:
                     raise serializers.ValidationError('La cuenta del usuario está desactivada.')
                 data['user'] = user
             else:
