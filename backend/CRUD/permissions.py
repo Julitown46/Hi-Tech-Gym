@@ -1,14 +1,30 @@
 from rest_framework import permissions
 
+
 class AdminReadOnlyPermission(permissions.BasePermission):
     """
-    Permite crear usuarios y hacer login a cualquiera,
-    pero solo los admin pueden ver la lista de usuarios.
+    Permite:
+    - Crear usuarios a cualquiera
+    - Admin puede ver la lista de usuarios
+    - Usuarios pueden gestionar su propio perfil
     """
+
     def has_permission(self, request, view):
-        if request.method == 'POST':  # Crear usuario o login
+        if request.method == 'POST':  # Crear usuario
             return True
-        return request.user and request.user.is_authenticated and request.user.rol == 'admin'
+
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        if request.method == 'GET' and 'pk' not in view.kwargs:
+            # Lista de usuarios - solo admin
+            return request.user.rol == 'admin'
+
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        # Usuario puede gestionar su propio perfil o admin puede gestionar cualquiera
+        return obj.id == request.user.id or request.user.rol == 'admin'
 
 class MembresiaPermission(permissions.BasePermission):
     """
