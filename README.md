@@ -68,7 +68,7 @@ cd frontend
 npm install
 ng serve
 ```
-##Endpoints de la API
+## Endpoints API
 
 Usuario endpoints:
 Create (POST): /usuarios/
