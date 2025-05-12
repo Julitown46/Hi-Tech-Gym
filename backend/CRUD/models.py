@@ -8,9 +8,9 @@ from rest_framework.exceptions import ValidationError
 class UsuarioManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
-            raise ValueError('Users must have a username')
+            raise ValueError('Usuarios deben tener username')
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError('Usuarios deben tener email')
 
         user = self.model(
             username=username,
@@ -25,7 +25,7 @@ class UsuarioManager(BaseUserManager):
         extra_fields.setdefault('rol', 'superuser')
 
         if extra_fields.get('rol') != 'superuser':
-            raise ValueError('Superuser must have rol=superuser')
+            raise ValueError('Superuser deben tener rol= superuser')
 
         return self.create_user(username, email, password, **extra_fields)
 
@@ -34,9 +34,9 @@ class UsuarioManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
+            raise ValueError('Superuser deben tener is_staff= True.')
         if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+            raise ValueError('Superuser deben tener is_superuser= True.')
 
         return self.create_user(username, email, password, **extra_fields)
 
@@ -132,7 +132,6 @@ class Pista(models.Model):
         return self.nombre
 
     def delete(self, *args, **kwargs):
-        # Soft delete - en lugar de borrar, desactivamos
         self.activa = False
         self.save()
 
@@ -144,7 +143,7 @@ class Reserva(models.Model):
     )
     pista = models.ForeignKey(
         Pista,
-        on_delete=models.PROTECT,  # Evita borrado de pistas con reservas
+        on_delete=models.PROTECT,
         limit_choices_to={'activa': True}
     )
     fecha = models.DateField()

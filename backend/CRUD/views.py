@@ -42,10 +42,10 @@ class LoginView(APIView):
         if serializer.is_valid():
             user = serializer.validated_data['user']
             login(request, user)
-            return Response({'message': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
+            return Response({'message': 'Login completado'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class LogoutView(APIView):
     def post(self, request):
         logout(request)
-        return Response({"message": "Successfully logged out"}, status=status.HTTP_200_OK)
+        return Response({"message": "Logout completado"}, status=status.HTTP_200_OK)
