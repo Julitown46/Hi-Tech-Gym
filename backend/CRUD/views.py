@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import LoginSerializer
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
@@ -44,3 +44,8 @@ class LoginView(APIView):
             login(request, user)
             return Response({'message': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
+
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response({"message": "Successfully logged out"}, status=status.HTTP_200_OK)
