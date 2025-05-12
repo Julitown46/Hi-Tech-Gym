@@ -68,6 +68,7 @@ cd frontend
 npm install
 ng serve
 ```
+
 ## Endpoints API
 
 Usuario endpoints:
@@ -93,6 +94,12 @@ Delete (DELETE): /reservas/{id}/
 Authentication endpoints:
 Login (POST): /login/
 Logout (POST): /logout/
+
+
+## Posibles errores
+
+Si hay algun problema con los token, probar en postman anyadir el encabezado **X-CSRFToken** con su token.
+Al igual que el **sessionid** se pone tambien en el encabezado por si acaso
 
 ## Notas Importantes
 - Solo los usuarios con **membresía activa** pueden reservar pistas de pádel.
