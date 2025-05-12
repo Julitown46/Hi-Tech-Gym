@@ -22,6 +22,14 @@ class UsuarioManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('rol', 'superuser')
+
+        if extra_fields.get('rol') != 'superuser':
+            raise ValueError('Superuser must have rol=superuser')
+
+        return self.create_user(username, email, password, **extra_fields)
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -37,7 +45,15 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True, null=False, blank=False)
     email = models.EmailField(unique=True, null=False, blank=False)
     membresia_activa = models.BooleanField(default=False)
-    rol = models.CharField(max_length=20, choices=[('admin', 'Admin'), ('usuario', 'Usuario')], default='usuario')
+    rol = models.CharField(
+        max_length=20,
+        choices=[
+            ('superuser', 'Superuser'),
+            ('admin', 'Admin'),
+            ('usuario', 'Usuario')
+        ],
+        default='usuario'
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -59,6 +75,17 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         if not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
+
+        if self.rol == 'superuser':
+            self.is_superuser = True
+            self.is_staff = True
+        elif self.rol == 'admin':
+            self.is_superuser = False
+            self.is_staff = True
+        else:
+            self.is_superuser = False
+            self.is_staff = False
+
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):

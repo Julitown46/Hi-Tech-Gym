@@ -9,6 +9,19 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('id',)
 
+    def validate(self, data):
+        if data.get('rol') == 'admin':
+            request = self.context.get('request')
+            if not request or not request.user.is_authenticated or request.user.rol != 'admin':
+                raise serializers.ValidationError("Solo los administradores pueden crear otros administradores")
+
+        if data.get('is_superuser'):
+            request = self.context.get('request')
+            if not request or not request.user.is_authenticated or not request.user.is_superuser:
+                raise serializers.ValidationError("Solo los superusuarios pueden crear otros superusuarios")
+
+        return data
+
 class MembresiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membresia
