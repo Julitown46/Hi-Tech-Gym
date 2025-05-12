@@ -68,6 +68,31 @@ cd frontend
 npm install
 ng serve
 ```
+## Endpoints API
+
+Usuario endpoints:
+Create (POST): /usuarios/
+Update (PUT/PATCH): /usuarios/{id}/
+Delete (DELETE): /usuarios/{id}/
+
+Pista endpoints:
+Create (POST): /pistas/
+Update (PUT/PATCH): /pistas/{id}/
+Delete (DELETE): /pistas/{id}/
+
+Membresia endpoints:
+Create (POST): /membresias/
+Update (PUT/PATCH): /membresias/{id}/
+Delete (DELETE): /membresias/{id}/
+
+Reserva endpoints:
+Create (POST): /reservas/
+Update (PUT/PATCH): /reservas/{id}/
+Delete (DELETE): /reservas/{id}/
+
+Authentication endpoints:
+Login (POST): /login/
+Logout (POST): /logout/
 
 ## Notas Importantes
 - Solo los usuarios con **membresía activa** pueden reservar pistas de pádel.
