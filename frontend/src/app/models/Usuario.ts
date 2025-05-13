@@ -5,4 +5,6 @@ export interface Usuario {
     password: string;
     rol: string;
     membresia_activa: string;
+    is_active: boolean;
+    is_staff: boolean;
 }
