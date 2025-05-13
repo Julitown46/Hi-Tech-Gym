@@ -163,6 +163,18 @@ class Reserva(models.Model):
         if not self.usuario.membresia_activa and self.estado == 'confirmada':
             raise ValidationError('El usuario debe tener una membresía activa para reservar')
 
+        reservas_dia = Reserva.objects.filter(
+            usuario=self.usuario,
+            fecha=self.fecha,
+            estado='confirmada'
+        ).count()
+
+        if self.pk:
+            reservas_dia = reservas_dia - 1
+
+        if reservas_dia >= 2:
+            raise ValidationError('Has alcanzado el límite de reservas para este día')
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)

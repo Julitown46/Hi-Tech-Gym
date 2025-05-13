@@ -1,7 +1,8 @@
 export interface Usuario {
     id_usuario: number;
-    nombre: string;
+    username: string;
     email: string;
-    contrasena: string;
+    password: string;
     rol: string;
+    membresia_activa: string;
 }

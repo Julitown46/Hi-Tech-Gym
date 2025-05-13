@@ -60,19 +60,40 @@ class ReservaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-            usuario = data.get('usuario')
+        usuario = data.get('usuario')
+        fecha = data.get('fecha')
 
-            hoy = date.today()
-            membresia_valida = Membresia.objects.filter(
-                usuario=usuario,
-                fecha_inicio__lte=hoy,
-                fecha_fin__gte=hoy
-            ).exists()
+        # Check membership
+        hoy = date.today()
+        membresia_valida = Membresia.objects.filter(
+            usuario=usuario,
+            fecha_inicio__lte=hoy,
+            fecha_fin__gte=hoy
+        ).exists()
 
-            if not membresia_valida:
-                raise serializers.ValidationError("El usuario no tiene una membresía activa y vigente.")
+        if not membresia_valida:
+            raise serializers.ValidationError("El usuario no tiene una membresía activa y vigente.")
 
-            return data
+        if fecha < hoy:
+            raise serializers.ValidationError("No se pueden hacer reservas para fechas pasadas")
+
+        reservas_dia = Reserva.objects.filter(
+            usuario=usuario,
+            fecha=fecha,
+            estado='confirmada'
+        ).count()
+
+        if reservas_dia >= 2:
+            raise serializers.ValidationError("Has alcanzado el límite de reservas para este día")
+
+        if Reserva.objects.filter(
+                pista=data['pista'],
+                fecha=fecha,
+                hora=data['hora']
+        ).exists():
+            raise serializers.ValidationError("Ya existe una reserva para esta pista en esta fecha y hora")
+
+        return data
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
