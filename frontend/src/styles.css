@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+:root {
+  --primary-color: #29ABE2;
+  --secondary-color: #F9A825;
+  --accent-color: #FFFFFF;
+  --text-primary: #333333;
+  --background-color: #F4F4F4;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  font-family: 'Nunito', sans-serif;
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: var(--accent-color);
+}
+
+.secondary-button {
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+}
+
+.highlight {
+  color: var(--primary-color);
+}
+
+.call-to-action {
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+}
+
+.padel-section {
+  border-left: 5px solid var(--primary-color);
+  padding-left: 1em;
+}
