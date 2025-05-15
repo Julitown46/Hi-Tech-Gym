@@ -1,1 +1,16 @@
-<p>navbar works!</p>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <a routerLink="/" class="navbar-logo-link">
+      <img src="Logo.png" alt="Logo" class="navbar-logo">
+      </a>
+  </div>
+  <div class="navbar-menu">
+    <a routerLink="/" class="navbar-item primary-button">Inicio</a>
+    <a routerLink="/reserva" class="navbar-item primary-button">Reserva</a>
+    <div class="navbar-item auth-buttons">
+      <a routerLink="/login" class="navbar-item secondary-button">Login</a>
+      <span class="button-separator">/</span>
+      <a routerLink="/registro" class="navbar-item secondary-button">Registrarse</a>
+      </div>
+  </div>
+</nav>
