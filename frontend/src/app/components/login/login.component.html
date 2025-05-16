@@ -1,0 +1,26 @@
+<section class="login-container">
+  <h2 class="highlight">Accede a tu cuenta</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group" [ngClass]="{'invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}">
+      <label for="username">Usuario</label>
+      <input id="username" type="text" formControlName="username" />
+      <small *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        El usuario es obligatorio
+      </small>
+    </div>
+
+    <div class="form-group" [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" formControlName="password" />
+      <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        La contraseña es obligatoria
+      </small>
+    </div>
+
+    <button type="submit" class="navbar-item primary-button" [disabled]="loginForm.invalid">
+      Iniciar sesión
+    </button>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+  </form>
+</section>

@@ -2,16 +2,23 @@
   <div class="navbar-brand">
     <a routerLink="/" class="navbar-logo-link">
       <img src="Logo.png" alt="Logo" class="navbar-logo">
-      </a>
+    </a>
   </div>
   <div class="navbar-menu">
     <a routerLink="/" class="navbar-item primary-button">Inicio</a>
-    <a routerLink="/reserva" class="navbar-item primary-button">Reserva</a>
+    <a routerLink="/reserva" class="navbar-item primary-button">Reservar Pista</a>
     <a routerLink="/contacto" class="navbar-item primary-button">Contacto</a>
-    <div class="navbar-item auth-buttons">
-      <a routerLink="/login" class="navbar-item secondary-button">Login</a>
+    <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
+      <a routerLink="/perfil" class="navbar-item secondary-button">Perfil</a>
       <span class="button-separator">/</span>
-      <a routerLink="/registro" class="navbar-item secondary-button">Registrarse</a>
+      <button (click)="logout()" class="navbar-item secondary-button">Cerrar sesión</button>
+    </div>
+    <ng-template #notLoggedIn>
+      <div class="navbar-item auth-buttons">
+        <a routerLink="/login" class="navbar-item secondary-button">Iniciar Sesión</a>
+        <span class="button-separator">/</span>
+        <a routerLink="/register" class="navbar-item secondary-button">Registrarse</a>
       </div>
+    </ng-template>
   </div>
 </nav>

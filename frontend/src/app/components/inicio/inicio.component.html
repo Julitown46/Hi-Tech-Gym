@@ -1,9 +1,15 @@
+<p *ngIf="logoutMessage" style="color: green; margin-top: 1rem;">{{ logoutMessage }}</p>
 <section class="hero">
     <h1>Bienvenido a <span class="highlight">Hi-Tech Gym</span></h1>
     <p>Tu gimnasio de confianza con reserva de pistas de pádel, clases dirigidas y la mejor tecnología deportiva para que 
         alcances tus objetivos. Entrena a tu ritmo, reserva fácilmente desde cualquier dispositivo y disfruta de 
         una experiencia única pensada para ti.</p>
-    <button class="navbar-item primary-button">Reserva tu pista ahora</button>
+    <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
+      <a routerLink="/reservar" class="navbar-item primary-button">Reserva tu pista ahora!</a>
+    </div>
+    <ng-template #notLoggedIn>
+      <a routerLink="/login" class="navbar-item secondary-button">Inicia sesion para reservar pista</a>
+    </ng-template>
   </section>
 
   <div class="carrusel-container">
