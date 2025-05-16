@@ -11,7 +11,7 @@
     <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
       <a routerLink="/perfil" class="navbar-item secondary-button">Perfil</a>
       <span class="button-separator">/</span>
-      <button (click)="logout()" class="navbar-item secondary-button">Cerrar sesión</button>
+      <button (click)="cerrarSesion()" class="navbar-item secondary-button">Cerrar sesión</button>
     </div>
     <ng-template #notLoggedIn>
       <div class="navbar-item auth-buttons">

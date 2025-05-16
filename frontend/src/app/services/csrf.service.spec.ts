@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LogoutService } from './logout.service';
+import { CsrfService } from './csrf.service';
 
-describe('LogoutService', () => {
-  let service: LogoutService;
+describe('CsrfService', () => {
+  let service: CsrfService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LogoutService);
+    service = TestBed.inject(CsrfService);
   });
 
   it('should be created', () => {

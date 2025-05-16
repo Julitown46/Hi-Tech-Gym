@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/login.service';
-import { LogoutService } from '../../services/logout.service';
 import { RouterLink, Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -16,21 +15,7 @@ export class InicioComponent {
 
     logoutMessage = '';
 
-  constructor(public loginService: LoginService, private router: Router, public logoutService: LogoutService) {}
-
-  async logout() {
-    try {
-      await this.logoutService.logout();
-      this.loginService.logout();
-      this.logoutMessage = 'Has cerrado sesión correctamente. Redirigiendo al inicio...';
-      setTimeout(() => {
-        this.logoutMessage = '';
-        this.router.navigate(['/']);
-      }, 2000);
-    } catch (error) {
-      console.error('Error al cerrar sesión en el servidor', error);
-    }
-  }
+  constructor(public loginService: LoginService, private router: Router) {}
 
     ngOnInit() {
     this.loginService.syncLoginStatus();

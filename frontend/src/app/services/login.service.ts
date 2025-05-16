@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-
   private readonly STORAGE_KEY = 'isLoggedIn';
   private loggedInSubject = new BehaviorSubject<boolean>(this.getStoredStatus());
 
   loggedIn$ = this.loggedInSubject.asObservable();
+
+  constructor(private http: HttpClient) {}
 
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -22,23 +24,78 @@ export class LoginService {
     return false; 
   }
 
-  login() {
-    if (this.isBrowser()) {
-      localStorage.setItem(this.STORAGE_KEY, 'true');
-      this.loggedInSubject.next(true);
+  private async getCsrfToken(): Promise<string> {
+    const response: any = await firstValueFrom(
+      this.http.get('http://localhost:8000/csrf/', { withCredentials: true })
+    );
+    return response.csrfToken;
+  }
+
+  async login(credentials: any): Promise<any> {
+    const csrfToken = await this.getCsrfToken();
+
+    const headers = new HttpHeaders({
+      'X-CSRFToken': csrfToken
+    });
+
+    try {
+      const response = await firstValueFrom(
+        this.http.post('http://localhost:8000/login/', credentials, {
+          headers,
+          withCredentials: true
+        })
+      );
+
+      if (this.isBrowser()) {
+        localStorage.setItem(this.STORAGE_KEY, 'true');
+        this.loggedInSubject.next(true);
+      }
+
+      return response;
+
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      throw error;
     }
   }
 
-  logout() {
-    localStorage.removeItem(this.STORAGE_KEY);
-    this.loggedInSubject.next(false);
+  async logout(): Promise<any> {
+    const csrfToken = await this.getCsrfToken();
+
+    const headers = new HttpHeaders({
+      'X-CSRFToken': csrfToken
+    });
+
+    try {
+      const response = await firstValueFrom(
+        this.http.post('http://localhost:8000/logout/', {}, {
+          headers,
+          withCredentials: true
+        })
+      );
+
+      this.clearLoginStatus();
+      return response;
+
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      this.clearLoginStatus();
+      throw error;
+    }
   }
 
-    isLoggedIn(): boolean {
+  private clearLoginStatus() {
+    if (this.isBrowser()) {
+      localStorage.removeItem(this.STORAGE_KEY);
+      this.loggedInSubject.next(false);
+    }
+  }
+
+  isLoggedIn(): boolean {
     return this.loggedInSubject.value;
   }
 
-    syncLoginStatus() {
+  syncLoginStatus() {
     this.loggedInSubject.next(this.getStoredStatus());
   }
 }

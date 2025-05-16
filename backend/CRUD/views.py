@@ -1,6 +1,5 @@
 from django.http import JsonResponse
-from django.middleware.csrf import get_token
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import viewsets, permissions, generics
 from .models import Usuario, Pista, Reserva, Membresia
 from .permissions import AdminReadOnlyPermission, MembresiaPermission, ReservaPermission, PistaPermission
@@ -53,7 +52,6 @@ class LogoutView(APIView):
         logout(request)
         return Response({"message": "Logout completado"}, status=status.HTTP_200_OK)
 
-@csrf_exempt
-def get_csrf_token(request):
-    token = get_token(request)
-    return JsonResponse({'csrfToken': token})
+@ensure_csrf_cookie
+def get_csrf(request):
+    return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE')})

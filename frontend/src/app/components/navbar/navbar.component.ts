@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterLink, Router, RouterModule } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../services/login.service';
-import { LogoutService } from '../../services/logout.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,23 +14,21 @@ export class NavbarComponent {
 
   logoutMessage = '';
 
-    constructor(public loginService: LoginService, private router: Router, public logoutService: LogoutService) {}
+  constructor(public loginService: LoginService, private router: Router) {}
 
-      ngOnInit() {
-      this.loginService.syncLoginStatus();
-    }
+  ngOnInit() {
+    this.loginService.syncLoginStatus();
+  }
 
-  async logout() {
+  async cerrarSesion() {
     try {
-      await this.logoutService.logout();
-      this.loginService.logout();
-      this.logoutMessage = 'Has cerrado sesión correctamente. Redirigiendo al inicio...';
-      setTimeout(() => {
-        this.logoutMessage = '';
-        this.router.navigate(['/']);
-      }, 2000);
+      await this.loginService.logout();
+      this.logoutMessage = 'Sesión cerrada correctamente';
+      this.router.navigate(['/']);
     } catch (error) {
-      console.error('Error al cerrar sesión en el servidor', error);
+      this.logoutMessage = 'Error al cerrar sesión';
+      console.error(error);
     }
   }
+
 }
