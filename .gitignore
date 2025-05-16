@@ -1,3 +1,13 @@
-/backend/venv
+# Ignora entornos virtuales
+venv/
+
+# Ignora archivos de caché de Python
 __pycache__/
+*.py[cod]
+
+# Ignora configuración de PyCharm / VS Code
 .idea/
+.vscode/
+
+# Otros comunes
+*.log

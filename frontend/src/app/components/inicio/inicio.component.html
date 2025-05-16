@@ -1,4 +1,17 @@
-<h1>Bienvenido a <span class="highlight">Hi-Tech Gym</span></h1>
-<p>Descubre nuestras instalaciones de última generación y reserva tu <span class="highlight">pista de pádel</span>.</p>
-<button class="primary-button">¡Regístrate ahora!</button>
-<button class="secondary-button">Ver horarios de pádel</button>
+<section class="hero">
+    <h1>Bienvenido a <span class="highlight">Hi-Tech Gym</span></h1>
+    <p>Tu gimnasio de confianza con reserva de pistas de pádel, clases dirigidas y la mejor tecnología deportiva para que 
+        alcances tus objetivos. Entrena a tu ritmo, reserva fácilmente desde cualquier dispositivo y disfruta de 
+        una experiencia única pensada para ti.</p>
+    <button class="navbar-item primary-button">Reserva tu pista ahora</button>
+  </section>
+
+  <div class="carrusel-container">
+    <h2>Nuestros servicios</h2>
+    <div class="carrusel">
+      <div class="card" *ngFor="let card of cards">
+        <img [src]="card.img" class="card-img" alt="">
+        <p>{{ card.text }}</p>
+      </div>
+    </div>
+  </div>
