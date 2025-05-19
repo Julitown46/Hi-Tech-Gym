@@ -9,9 +9,11 @@
     <a routerLink="/reserva" class="navbar-item primary-button">Reservar Pista</a>
     <a routerLink="/contacto" class="navbar-item primary-button">Contacto</a>
     <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
-      <a routerLink="/perfil" class="navbar-item secondary-button">Perfil</a>
-      <span class="button-separator">/</span>
-      <button (click)="cerrarSesion()" class="navbar-item secondary-button">Cerrar sesión</button>
+      <div class="navbar-item auth-buttons">
+        <a routerLink="/perfil" class="navbar-item secondary-button">Perfil</a>
+        <span class="button-separator">/</span>
+        <a (click)="cerrarSesion()" class="navbar-item secondary-button">Cerrar sesión</a>
+      </div>
     </div>
     <ng-template #notLoggedIn>
       <div class="navbar-item auth-buttons">

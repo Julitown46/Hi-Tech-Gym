@@ -13,11 +13,11 @@ import { RouterLink, Router, RouterModule } from '@angular/router';
 
 export class InicioComponent {
 
-    logoutMessage = '';
+  logoutMessage = '';
 
-  constructor(public loginService: LoginService, private router: Router) {}
+  constructor(public loginService: LoginService, private router: Router) { }
 
-    ngOnInit() {
+  ngOnInit() {
     this.loginService.syncLoginStatus();
   }
 

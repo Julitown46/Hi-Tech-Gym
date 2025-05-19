@@ -15,12 +15,7 @@ export class RegisterComponent {
     return this.loginService.isLoggedIn();
   }
 
-  logout() {
-    this.loginService.logout();
-  }
-
   register() {
-    // Implement your registration logic here
     console.log('User registered');
   }
 

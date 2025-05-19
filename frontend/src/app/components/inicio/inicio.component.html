@@ -5,10 +5,14 @@
         alcances tus objetivos. Entrena a tu ritmo, reserva fácilmente desde cualquier dispositivo y disfruta de 
         una experiencia única pensada para ti.</p>
     <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
+       <div class="navbar-item auth-buttons">
       <a routerLink="/reservar" class="navbar-item primary-button">Reserva tu pista ahora!</a>
+      </div>
     </div>
     <ng-template #notLoggedIn>
+       <div class="navbar-item auth-buttons">
       <a routerLink="/login" class="navbar-item secondary-button">Inicia sesion para reservar pista</a>
+      </div>
     </ng-template>
   </section>
 
