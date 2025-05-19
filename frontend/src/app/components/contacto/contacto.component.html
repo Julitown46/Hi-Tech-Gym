@@ -1,1 +1,63 @@
-<p>contacto works!</p>
+<div class="section">
+    <h2>Sobre Nosotros</h2>
+    <div class="card">
+        <p>
+            Hi-Tech Gym nació en 2024 como el sueño de un grupo de apasionados del deporte y la tecnología.
+            Después de años entrenando en gimnasios tradicionales, nos dimos cuenta de que faltaba un espacio que
+            combinara la experiencia humana de los entrenadores con las posibilidades que ofrece la tecnología actual.
+        </p>
+        <p>
+            Así nació nuestra idea: crear un gimnasio diferente, donde pudieras gestionar todo desde tu móvil,
+            reservar pistas, apuntarte a clases, y entrenar con maquinaria de última generación que te ayudara a mejorar
+            cada día.
+        </p>
+        <p>
+            Empezamos en un pequeño local con solo dos pistas de pádel y una sala de entrenamiento, pero gracias a la
+            confianza
+            de nuestros clientes y el esfuerzo de nuestro equipo, hoy somos un gimnasio de referencia en la ciudad.
+        </p>
+        <p>
+            Nuestro compromiso sigue siendo el mismo desde el primer día: ofrecerte una experiencia de entrenamiento
+            única,
+            adaptada a ti, accesible desde cualquier lugar y con la mejor tecnología deportiva.
+        </p>
+    </div>
+</div>
+
+
+<div class="section">
+    <h2>Beneficios de ser miembro</h2>
+    <ul>
+        <li>✔️ Acceso a todas las pistas y zonas de entrenamiento</li>
+        <li>✔️ Clases dirigidas por profesionales</li>
+        <li>✔️ Reservas online desde cualquier dispositivo</li>
+        <li>✔️ Descuentos exclusivos para socios</li>
+        <li>✔️ Tecnología de última generación en maquinaria</li>
+    </ul>
+</div>
+
+<div class="section">
+    <h2>Lo que dicen nuestros clientes</h2>
+    <div class="review-carrusel">
+        <div class="card" *ngFor="let review of reviews">
+            <p>"{{ review.text }}"</p>
+            <strong>- {{ review.author }}</strong>
+        </div>
+    </div>
+</div>
+
+<section class="call-to-action section">
+    <h2>¿A qué esperas para unirte?</h2>
+    <p>Regístrate ahora y empieza a disfrutar de todos nuestros servicios.</p>
+    <div class="navbar-item auth-buttons">
+        <a routerLink="/register" class="navbar-item secondary-button">Registrarse</a>
+    </div>
+</section>
+
+<div class="section">
+    <h2>Visítanos</h2>
+    <div class="card">
+        <p>📍 Calle Gimnasio 23, Malaga</p>
+        <p>🕒 Lunes a Viernes: 7:00 - 22:00 | Sábados y Domingos: 8:00 - 20:00</p>
+    </div>
+</div>

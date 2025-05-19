@@ -7,7 +7,7 @@
   <div class="navbar-menu">
     <a routerLink="/" class="navbar-item primary-button">Inicio</a>
     <a routerLink="/reserva" class="navbar-item primary-button">Reservar Pista</a>
-    <a routerLink="/contacto" class="navbar-item primary-button">Contacto</a>
+    <a routerLink="/sobre-nosotros" class="navbar-item primary-button">Sobre nosotros</a>
     <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
       <div class="navbar-item auth-buttons">
         <a routerLink="/perfil" class="navbar-item secondary-button">Perfil</a>

@@ -11,7 +11,7 @@ export const routes: Routes = [
     { path: '', component: InicioComponent },
     { path: 'login', component: LoginComponent },
     { path: 'perfil', component: PerfilComponent, canActivate: [authGuard] },
-    { path: 'contacto', component: ContactoComponent },
+    { path: 'sobre-nosotros', component: ContactoComponent },
     { path: 'reservas', component: ReservasComponent, canActivate: [authGuard] },
     { path: 'register', component: RegisterComponent },
     { path: '**', redirectTo: 'login' }

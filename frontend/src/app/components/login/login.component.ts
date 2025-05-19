@@ -38,6 +38,8 @@ export class LoginComponent {
             this.errorMessage = 'Credenciales incorrectas o usuario no válido';
           }
         });
+    } else {
+      this.toastService.showMessage('Por favor, rellene todos los datos');
     }
   }
 
