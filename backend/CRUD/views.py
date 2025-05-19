@@ -18,26 +18,26 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return [permissions.AllowAny()]
-        return [AdminReadOnlyPermission()]  # Updated permission
+        return [AdminReadOnlyPermission()]
 
 class MembresiaViewSet(viewsets.ModelViewSet):
     queryset = Membresia.objects.all()
     serializer_class = MembresiaSerializer
-    permission_classes = [MembresiaPermission]  # Updated permission
+    permission_classes = [MembresiaPermission]
 
 class PistaViewSet(viewsets.ModelViewSet):
     queryset = Pista.objects.all()
     serializer_class = PistaSerializer
-    permission_classes = [PistaPermission]   # Basic authentication required
+    permission_classes = [PistaPermission]
 
 class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
-    permission_classes = [ReservaPermission]  # Updated permission
+    permission_classes = [ReservaPermission]
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
-    permission_classes = [permissions.AllowAny]  # Allow anyone to login
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data, context={'request': request})
