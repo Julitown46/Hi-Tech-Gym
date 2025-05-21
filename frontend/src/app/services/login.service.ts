@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Usuario } from '../models/Usuario';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +10,19 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class LoginService {
   private readonly STORAGE_KEY = 'isLoggedIn';
   private loggedInSubject = new BehaviorSubject<boolean>(this.getStoredStatus());
+  private usuario: Usuario | null = null;
+
+  setUsuarioLogueado(usuario: Usuario) {
+    this.usuario = usuario;
+  }
+
+  getUsuarioLogueado(): Usuario | null {
+    return this.usuario;
+  }
 
   loggedIn$ = this.loggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastService: ToastService) { }
 
   private isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -21,7 +32,7 @@ export class LoginService {
     if (this.isBrowser()) {
       return localStorage.getItem(this.STORAGE_KEY) === 'true';
     }
-    return false; 
+    return false;
   }
 
   private async getCsrfToken(): Promise<string> {
@@ -39,7 +50,7 @@ export class LoginService {
     });
 
     try {
-      const response = await firstValueFrom(
+      const response: any = await firstValueFrom(
         this.http.post('http://localhost:8000/login/', credentials, {
           headers,
           withCredentials: true
@@ -51,9 +62,12 @@ export class LoginService {
         this.loggedInSubject.next(true);
       }
 
+      this.setUsuarioLogueado(response);
+
       return response;
 
     } catch (error) {
+      this.toastService.showMessage('Error al iniciar sesion');
       console.error('Error al iniciar sesión:', error);
       throw error;
     }
@@ -78,6 +92,7 @@ export class LoginService {
       return response;
 
     } catch (error) {
+      this.toastService.showMessage('Error al cerrar sesion');
       console.error('Error al cerrar sesión:', error);
       this.clearLoginStatus();
       throw error;

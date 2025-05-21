@@ -47,11 +47,20 @@
 </div>
 
 <section class="call-to-action section">
-    <h2>¿A qué esperas para unirte?</h2>
-    <p>Regístrate ahora y empieza a disfrutar de todos nuestros servicios.</p>
-    <div class="navbar-item auth-buttons">
-        <a routerLink="/register" class="navbar-item secondary-button">Registrarse</a>
+    <div *ngIf="loginService.loggedIn$ | async; else notLoggedIn">
+        <h2>¿A qué esperas para reservar una pista?</h2>
+        <p>No te contengas y pasa un buen rato en una de nuestras maravillosas pistas.</p>
+        <div class="navbar-item auth-buttons">
+            <a routerLink="/reservas" class="navbar-item secondary-button">Reservar</a>
+        </div>
     </div>
+    <ng-template #notLoggedIn>
+        <h2>¿A qué esperas para unirte?</h2>
+        <p>Regístrate ahora y empieza a disfrutar de todos nuestros servicios.</p>
+        <div class="navbar-item auth-buttons">
+            <a routerLink="/register" class="navbar-item secondary-button">Registrarse</a>
+        </div>
+    </ng-template>
 </section>
 
 <div class="section">

@@ -1,8 +1,8 @@
+import { Pista } from "./Pista";
+
 export interface Reserva {
-    id_reserva: number;
-    id_usuario: number;
-    id_pista: number;
-    fecha: string;
-    hora: string;
-    estado: string;
+  pista: Pista;
+  fecha: string; // formato: "2025-05-22"
+  hora: string;  // "18:00"
+  estado: 'confirmada' | 'cancelada';
 }

@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ToastService } from '../../services/toast.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private toastService: ToastService, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private toastService: ToastService, private http: HttpClient, private router: Router, public loginService: LoginService) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -29,6 +30,7 @@ export class LoginComponent {
         .subscribe({
           next: (response) => {
             console.log('Login exitoso:', response);
+            console.log(this.loginService.getUsuarioLogueado());
             this.toastService.showMessage('Sesion iniciada correctamente');
             localStorage.setItem('isLoggedIn', 'true');
             this.router.navigate(['/']);

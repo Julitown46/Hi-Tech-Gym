@@ -12,10 +12,10 @@ import { RouterLink, Router, RouterModule } from '@angular/router';
 })
 
 export class InicioComponent {
-  
-  constructor(public loginService: LoginService, private router: Router) {}
 
-    ngOnInit() {
+  constructor(public loginService: LoginService, private router: Router) { }
+
+  ngOnInit() {
     this.loginService.syncLoginStatus();
   }
 

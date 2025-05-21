@@ -44,7 +44,15 @@ class LoginView(APIView):
         if serializer.is_valid():
             user = serializer.validated_data['user']
             login(request, user)
-            return Response({'message': 'Login completado'}, status=status.HTTP_200_OK)
+
+            return Response({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'membresia_activa': user.membresia_activa,
+                'rol': user.rol,
+            }, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class LogoutView(APIView):

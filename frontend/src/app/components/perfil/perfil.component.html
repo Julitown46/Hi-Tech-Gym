@@ -1,1 +1,41 @@
-<p>perfil works!</p>
+<section class="section">
+  <div class="card">
+    <h2 class="highlight">Perfil de Usuario</h2>
+
+    <div class="info-block">
+      <p><strong>Nombre de usuario:</strong> {{ usuario?.username }}</p>
+      <p><strong>Email:</strong> {{ usuario?.email }}</p>
+      <p>
+        <strong>Membresía:</strong>
+        <span [class]="usuario?.membresia_activa ? 'highlight' : 'text-warning'">
+          {{ usuario?.membresia_activa ? 'Activa' : 'Inactiva' }}
+        </span>
+      </p>
+    </div>
+
+    <div class="info-block">
+      <h3 class="call-to-action">Reservas Confirmadas</h3>
+
+      <div *ngIf="reservas.length > 0; else noReservas">
+        <ul>
+          <li *ngFor="let reserva of reservas">
+            <div class="card pista-card">
+              <p><strong>Pista:</strong> {{ reserva.pista.nombre }}</p>
+              <p><strong>Fecha:</strong> {{ reserva.fecha | date:'fullDate' }}</p>
+              <p><strong>Hora:</strong> {{ reserva.hora }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <ng-template #noReservas>
+        <p class="text-muted">No tienes reservas confirmadas.</p>
+      </ng-template>
+    </div>
+
+    <div class="actions mt-4">
+      <button class="navbar-item primary-button">Editar Perfil</button>
+      <button class="navbar-item secondary-button">Cerrar Sesión</button>
+    </div>
+  </div>
+</section>

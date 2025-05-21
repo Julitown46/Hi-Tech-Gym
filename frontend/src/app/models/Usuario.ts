@@ -1,10 +1,7 @@
 export interface Usuario {
-    id_usuario: number;
-    username: string;
-    email: string;
-    password: string;
-    rol: string;
-    membresia_activa: string;
-    is_active: boolean;
-    is_staff: boolean;
+  id: number;
+  username: string;
+  email: string;
+  membresia_activa: boolean;
+  rol: 'superuser' | 'admin' | 'usuario';
 }
