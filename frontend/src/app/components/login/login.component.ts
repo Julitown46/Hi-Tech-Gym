@@ -26,19 +26,16 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.http.post<any>('http://localhost:8000/login/', this.loginForm.value, { withCredentials: true })
-        .subscribe({
-          next: (response) => {
-            console.log('Login exitoso:', response);
-            console.log(this.loginService.getUsuarioLogueado());
-            this.toastService.showMessage('Sesion iniciada correctamente');
-            localStorage.setItem('isLoggedIn', 'true');
-            this.router.navigate(['/']);
-          },
-          error: (error) => {
-            console.error('Error al iniciar sesión', error);
-            this.errorMessage = 'Credenciales incorrectas o usuario no válido';
-          }
+      this.loginService.login(this.loginForm.value)
+        .then(response => {
+          console.log('Login exitoso:', response);
+          console.log('Usuario guardado:', this.loginService.getUsuarioLogueado());
+          this.toastService.showMessage('Sesión iniciada correctamente');
+          this.router.navigate(['/']);
+        })
+        .catch(error => {
+          console.error('Error al iniciar sesión', error);
+          this.errorMessage = 'Credenciales incorrectas o usuario no válido';
         });
     } else {
       this.toastService.showMessage('Por favor, rellene todos los datos');

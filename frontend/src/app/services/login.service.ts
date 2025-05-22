@@ -11,14 +11,32 @@ export class LoginService {
   private readonly STORAGE_KEY = 'isLoggedIn';
   private loggedInSubject = new BehaviorSubject<boolean>(this.getStoredStatus());
   private usuario: Usuario | null = null;
+  private readonly USER_KEY = 'usuario';
 
-  setUsuarioLogueado(usuario: Usuario) {
-    this.usuario = usuario;
+
+setUsuarioLogueado(usuario: Usuario): void {
+  this.usuario = usuario;
+
+  if (this.isBrowser()) {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(usuario));
+  }
+}
+
+
+getUsuarioLogueado(): Usuario | null {
+  if (this.usuario) return this.usuario;
+
+  if (this.isBrowser()) {
+    const stored = localStorage.getItem(this.USER_KEY);
+    if (stored) {
+      this.usuario = JSON.parse(stored);
+      return this.usuario;
+    }
   }
 
-  getUsuarioLogueado(): Usuario | null {
-    return this.usuario;
-  }
+  return null;
+}
+
 
   loggedIn$ = this.loggedInSubject.asObservable();
 
@@ -99,12 +117,14 @@ export class LoginService {
     }
   }
 
-  private clearLoginStatus() {
-    if (this.isBrowser()) {
-      localStorage.removeItem(this.STORAGE_KEY);
-      this.loggedInSubject.next(false);
-    }
+private clearLoginStatus(): void {
+  if (this.isBrowser()) {
+    localStorage.removeItem(this.STORAGE_KEY);
+    localStorage.removeItem(this.USER_KEY);
+    this.loggedInSubject.next(false);
+    this.usuario = null;
   }
+}
 
   isLoggedIn(): boolean {
     return this.loggedInSubject.value;

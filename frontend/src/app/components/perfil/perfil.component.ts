@@ -22,8 +22,21 @@ export class PerfilComponent implements OnInit {
   error: string | null = null;
 
   ngOnInit(): void {
-    this.cargarPerfil();
+    const usuario = this.loginService.getUsuarioLogueado();
+    console.log('Usuario cargado desde LoginService:', usuario);
+
+    if (!usuario) {
+      this.error = 'No se encontró información del usuario.';
+      return;
+    }
+
+    this.usuario = usuario;
+
+    this.reservaService.getReservasPorUsuario(usuario.id).subscribe(reservas => {
+      this.reservas = reservas.filter(r => r.estado === 'confirmada');
+    });
   }
+
 
   cargarPerfil(): void {
     const usuario = this.loginService.getUsuarioLogueado();
