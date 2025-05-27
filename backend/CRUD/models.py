@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password
@@ -106,23 +107,21 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
 class Membresia(models.Model):
     usuario = models.ForeignKey(
-        Usuario,
+        'Usuario',
         on_delete=models.CASCADE,
         related_name='membresias'
     )
-    fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
-
-    def clean(self):
-        if self.fecha_inicio and self.fecha_fin:
-            if self.fecha_inicio > self.fecha_fin:
-                raise ValidationError('La fecha de inicio debe ser anterior a la fecha fin')
-            if self.fecha_inicio < timezone.now().date():
-                raise ValidationError('La fecha de inicio no puede ser en el pasado')
+    fecha_inicio = models.DateField(editable=False)
+    fecha_fin = models.DateField(editable=False)
 
     def save(self, *args, **kwargs):
-        self.full_clean()
+        if not self.pk:
+            self.fecha_inicio = timezone.now().date()
+            self.fecha_fin = self.fecha_inicio + relativedelta(months=1)
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Membresía de {self.usuario} del {self.fecha_inicio} al {self.fecha_fin}"
 
 class Pista(models.Model):
     nombre = models.CharField(max_length=100)

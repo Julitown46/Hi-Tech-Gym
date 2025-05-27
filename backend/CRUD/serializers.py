@@ -25,8 +25,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class MembresiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membresia
-        fields = '__all__'
-        read_only_fields = ('usuario',)
+        fields = ['id', 'usuario', 'fecha_inicio', 'fecha_fin']
+        read_only_fields = ['fecha_inicio', 'fecha_fin', 'usuario']
 
     def create(self, validated_data):
         membresia = super().create(validated_data)

@@ -19,7 +19,11 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('username', 'email')
     ordering = ('username',)
 
+class MembresiaAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'fecha_inicio', 'fecha_fin')
+    readonly_fields = ('fecha_inicio', 'fecha_fin', 'usuario')
+
 admin.site.register(Usuario, CustomUserAdmin)
-admin.site.register(Membresia)
+admin.site.register(Membresia, MembresiaAdmin)
 admin.site.register(Pista)
 admin.site.register(Reserva)
