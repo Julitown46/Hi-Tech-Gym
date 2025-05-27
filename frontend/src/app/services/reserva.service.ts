@@ -12,18 +12,24 @@ export class ReservaService {
   constructor(private http: HttpClient) {}
 
   getReservas(): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(this.apiUrl);
+    return this.http.get<Reserva[]>(this.apiUrl, { withCredentials: true });
   }
 
   getReservasPorUsuario(usuarioId: number): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(`${this.apiUrl}?usuario=${usuarioId}`);
+    return this.http.get<Reserva[]>(`${this.apiUrl}?usuario=${usuarioId}`, {
+      withCredentials: true
+    });
   }
 
   createReserva(reserva: Reserva): Observable<Reserva> {
-    return this.http.post<Reserva>(this.apiUrl, reserva);
+    return this.http.post<Reserva>(this.apiUrl, reserva, {
+      withCredentials: true
+    });
   }
 
   cancelarReserva(id: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}${id}/`, { estado: 'cancelada' });
+    return this.http.patch(`${this.apiUrl}${id}/`, { estado: 'cancelada' }, {
+      withCredentials: true
+    });
   }
 }

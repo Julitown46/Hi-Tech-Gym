@@ -45,7 +45,6 @@ class UsuarioManager(BaseUserManager):
 class Usuario(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True, null=False, blank=False)
     email = models.EmailField(unique=True, null=False, blank=False)
-    membresia_activa = models.BooleanField(default=False)
     rol = models.CharField(
         max_length=20,
         choices=[
@@ -92,6 +91,11 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def delete(self, *args, **kwargs):
         self.reservas.filter(estado='confirmada').update(estado='cancelada')
         super().delete(*args, **kwargs)
+
+    @property
+    def membresia_activa(self):
+        hoy = timezone.now().date()
+        return self.membresias.filter(fecha_inicio__lte=hoy, fecha_fin__gte=hoy).exists()
 
     @property
     def is_anonymous(self):

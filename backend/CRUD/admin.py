@@ -3,11 +3,11 @@ from django.contrib.auth.admin import UserAdmin
 from .models import Usuario, Membresia, Pista, Reserva
 
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'rol', 'membresia_activa', 'is_active', 'is_staff')
-    list_filter = ('rol', 'membresia_activa', 'is_active')
+    list_display = ('username', 'email', 'rol', 'is_active', 'is_staff')
+    list_filter = ('rol', 'is_active')
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
-        ('Información personal', {'fields': ('rol', 'membresia_activa')}),
+        ('Información personal', {'fields': ('rol',)}),
         ('Permisos', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
     )
     add_fieldsets = (
@@ -21,7 +21,12 @@ class CustomUserAdmin(UserAdmin):
 
 class MembresiaAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'fecha_inicio', 'fecha_fin')
-    readonly_fields = ('fecha_inicio', 'fecha_fin', 'usuario')
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ('fecha_inicio', 'fecha_fin', 'usuario')
+        return ()
+
 
 admin.site.register(Usuario, CustomUserAdmin)
 admin.site.register(Membresia, MembresiaAdmin)
