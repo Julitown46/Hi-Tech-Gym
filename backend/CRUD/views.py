@@ -1,8 +1,10 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Usuario, Pista, Reserva, Membresia
-from .permissions import AdminReadOnlyPermission, MembresiaPermission, ReservaPermission, PistaPermission
+from .permissions import AdminReadOnlyPermission, ReservaPermission, PistaPermission, MembresiaPermission
 from .serializers import UsuarioSerializer, PistaSerializer, ReservaSerializer, MembresiaSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -63,3 +65,12 @@ class LogoutView(APIView):
 @ensure_csrf_cookie
 def get_csrf(request):
     return JsonResponse({'csrfToken': request.META.get('CSRF_COOKIE')})
+
+
+class MisReservasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        reservas = Reserva.objects.filter(usuario=request.user, estado='confirmada')
+        serializer = ReservaSerializer(reservas, many=True)
+        return Response(serializer.data)

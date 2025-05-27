@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers, permissions, generics
 from .models import Usuario, Membresia, Pista, Reserva
-from datetime import date
+from datetime import date, timedelta
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,28 +27,18 @@ class MembresiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membresia
         fields = ['id', 'usuario', 'fecha_inicio', 'fecha_fin']
-        read_only_fields = ['fecha_inicio', 'fecha_fin', 'usuario']
+        read_only_fields = ['usuario', 'fecha_inicio', 'fecha_fin']
 
     def create(self, validated_data):
-        membresia = super().create(validated_data)
-        self.actualizar_estado_usuario(membresia.usuario)
-        return membresia
-
-    def update(self, instance, validated_data):
-        membresia = super().update(instance, validated_data)
-        self.actualizar_estado_usuario(membresia.usuario)
-        return membresia
-
-    def actualizar_estado_usuario(self, usuario):
+        usuario = self.context['request'].user
         hoy = date.today()
-        tiene_membresia_activa = Membresia.objects.filter(
-            usuario=usuario,
-            fecha_inicio__lte=hoy,
-            fecha_fin__gte=hoy
-        ).exists()
+        fin = hoy + timedelta(days=30)
 
-        usuario.membresia_activa = tiene_membresia_activa
-        usuario.save()
+        return Membresia.objects.create(
+            usuario=usuario,
+            fecha_inicio=hoy,
+            fecha_fin=fin
+        )
 
 class PistaSerializer(serializers.ModelSerializer):
     class Meta:

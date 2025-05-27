@@ -28,10 +28,20 @@ class AdminReadOnlyPermission(permissions.BasePermission):
 
 class MembresiaPermission(permissions.BasePermission):
     """
-    Solo los administradores pueden gestionar las membresías.
+    Los usuarios pueden crear su propia membresía. Solo los admin pueden ver/modificar otras.
     """
+
     def has_permission(self, request, view):
+        # Permitir que cualquier usuario autenticado cree su propia membresía (POST)
+        if request.method == 'POST':
+            return request.user and request.user.is_authenticated
+
+        # Para otros métodos, solo admin
         return request.user and request.user.is_authenticated and request.user.rol == 'admin'
+
+    def has_object_permission(self, request, view, obj):
+        # Solo el admin puede modificar/eliminar cualquier objeto
+        return request.user.rol == 'admin'
 
 class ReservaPermission(permissions.BasePermission):
     """

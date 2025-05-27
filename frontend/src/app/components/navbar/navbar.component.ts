@@ -24,6 +24,7 @@ export class NavbarComponent {
   async cerrarSesion() {
     try {
       await this.loginService.logout();
+      location.reload();
       this.logoutMessage = 'Sesión cerrada correctamente';
       this.toastService.showMessage('Sesion cerrada correctamente');
       this.router.navigate(['/']);

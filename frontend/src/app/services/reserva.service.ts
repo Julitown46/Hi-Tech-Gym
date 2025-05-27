@@ -32,4 +32,11 @@ export class ReservaService {
       withCredentials: true
     });
   }
+
+  getReservasDelUsuarioActual(): Observable<Reserva[]> {
+  return this.http.get<Reserva[]>('http://localhost:8000/reservas/mis-reservas/', {
+    withCredentials: true
+  });
+}
+
 }

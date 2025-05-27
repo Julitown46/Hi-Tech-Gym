@@ -12,11 +12,16 @@
         </span>
       </p>
     </div>
+    <div *ngIf="!usuario?.membresia_activa" class="mt-3">
+      <button (click)="activarMembresia()" class="primary-button navbar-item">
+        Activar membresía (1 mes)
+      </button>
+    </div>
 
     <div class="info-block">
-      <h3 class="call-to-action">Reservas Confirmadas</h3>
 
       <div *ngIf="reservas.length > 0; else noReservas">
+        <h3 class="call-to-action">Reservas Confirmadas</h3>
         <ul>
           <li *ngFor="let reserva of reservas">
             <div class="card pista-card">
@@ -29,13 +34,9 @@
       </div>
 
       <ng-template #noReservas>
-        <p class="text-muted">No tienes reservas confirmadas.</p>
+        <h3 class="call-to-action">No tienes reservas confirmadas</h3>
       </ng-template>
     </div>
 
-    <div class="actions mt-4">
-      <button class="navbar-item primary-button">Editar Perfil</button>
-      <button class="navbar-item secondary-button">Cerrar Sesión</button>
-    </div>
   </div>
 </section>
