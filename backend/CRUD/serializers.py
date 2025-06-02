@@ -49,6 +49,7 @@ class ReservaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reserva
         fields = '__all__'
+        depth = 1
 
     def validate(self, data):
         usuario = data.get('usuario')

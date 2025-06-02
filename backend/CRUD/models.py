@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
+from datetime import datetime, timedelta
 
 
 class UsuarioManager(BaseUserManager):
@@ -153,7 +154,11 @@ class Reserva(models.Model):
     hora = models.TimeField()
     estado = models.CharField(
         max_length=20,
-        choices=[('confirmada', 'Confirmada'), ('cancelada', 'Cancelada')],
+        choices=[
+            ('confirmada', 'Confirmada'),
+            ('cancelada', 'Cancelada'),
+            ('completada', 'Completada')
+        ],
         default='confirmada'
     )
 
@@ -180,7 +185,17 @@ class Reserva(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
+
+        if self.estado == 'confirmada':
+            now = timezone.now()
+            reserva_datetime = datetime.combine(self.fecha, self.hora)
+            reserva_datetime = timezone.make_aware(reserva_datetime)
+
+            if now >= reserva_datetime + timedelta(minutes=20):
+                self.estado = 'completada'
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.fecha} {self.hora} - {self.usuario.username}"
+
