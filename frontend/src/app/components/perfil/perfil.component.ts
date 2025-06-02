@@ -102,4 +102,46 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  mostrarConfirmacion = false;
+
+  confirmarCancelacion(): void {
+    this.mostrarConfirmacion = true;
+  }
+
+  async cancelarMembresia(): Promise<void> {
+    this.mostrarConfirmacion = false;
+
+    if (!this.usuario) {
+      this.toastService.showMessage('No se puede cancelar sin usuario.');
+      return;
+    }
+
+    try {
+      const csrfToken = await this.loginService['getCsrfToken']();
+
+      const headers = new HttpHeaders({
+        'X-CSRFToken': csrfToken
+      });
+
+      await firstValueFrom(
+        this.http.delete('http://localhost:8000/membresias/cancelar/', {
+          headers,
+          withCredentials: true
+        })
+      );
+
+      const actualizado = { ...this.usuario, membresia_activa: false };
+      this.loginService.setUsuarioLogueado(actualizado);
+      this.usuario = actualizado;
+
+      this.reservas = [];
+
+      this.toastService.showMessage('Membresía cancelada con éxito.');
+    } catch (error) {
+      console.error('Error al cancelar la membresía:', error);
+      this.toastService.showMessage('Error al cancelar la membresía.');
+    }
+  }
+
+
 }

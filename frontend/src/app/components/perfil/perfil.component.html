@@ -18,6 +18,21 @@
       </button>
     </div>
 
+    <button *ngIf="usuario?.membresia_activa" class="primary-button navbar-item" (click)="confirmarCancelacion()">
+      Cancelar Membresía
+    </button>
+
+    <div *ngIf="mostrarConfirmacion" class="modal-overlay">
+      <div class="modal">
+        <h3>¿Estás seguro?</h3>
+        <p>Esta acción cancelará tu membresía activa y todas tus reservas de pista.</p>
+        <div class="modal-buttons">
+          <button class="secondary-button navbar-item" (click)="cancelarMembresia()">Sí, cancelar</button>
+          <button class="primary-button navbar-item" (click)="mostrarConfirmacion = false">No</button>
+        </div>
+      </div>
+    </div>
+
     <div class="info-block">
 
       <div *ngIf="reservas.length > 0; else noReservas">

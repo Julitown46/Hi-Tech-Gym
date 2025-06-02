@@ -1,6 +1,9 @@
+from datetime import date
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Usuario, Pista, Reserva, Membresia
@@ -26,6 +29,26 @@ class MembresiaViewSet(viewsets.ModelViewSet):
     queryset = Membresia.objects.all()
     serializer_class = MembresiaSerializer
     permission_classes = [MembresiaPermission]
+
+    @action(detail=False, methods=['delete'], url_path='cancelar', permission_classes=[IsAuthenticated])
+    def cancelar_membresia(self, request):
+        usuario = request.user
+        hoy = date.today()
+
+        membresias = Membresia.objects.filter(
+            usuario=usuario,
+            fecha_inicio__lte=hoy,
+            fecha_fin__gte=hoy
+        )
+
+        if not membresias.exists():
+            return Response({"detail": "No tienes membresía activa."}, status=status.HTTP_400_BAD_REQUEST)
+
+        membresias.delete()
+
+        Reserva.objects.filter(usuario=usuario, estado='confirmada').update(estado='cancelada')
+
+        return Response({"detail": "Membresía y reservas canceladas correctamente."}, status=status.HTTP_204_NO_CONTENT)
 
 class PistaViewSet(viewsets.ModelViewSet):
     queryset = Pista.objects.all()
