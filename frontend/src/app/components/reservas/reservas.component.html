@@ -1,1 +1,54 @@
-<p>reservas works!</p>
+<div class="section">
+    <h2 class="call-to-action">Haz una nueva reserva</h2>
+
+    <form (ngSubmit)="crearReserva()" class="card">
+        <div>
+            <label for="pista">Pista:</label>
+            <select id="pista" [(ngModel)]="nuevaReserva.pista" name="pista" required>
+                <option [ngValue]="null" disabled selected>Selecciona una pista</option>
+                <option *ngFor="let pista of pistas" [ngValue]="pista.id">{{ pista.nombre }}</option>
+            </select>
+
+        </div>
+
+        <div>
+            <label for="fecha">Fecha: </label>
+            <input type="date" id="fecha" [(ngModel)]="nuevaReserva.fecha" name="fecha" required />
+        </div>
+
+        <div>
+            <label for="hora">Hora: </label>
+            <input type="time" id="hora" [(ngModel)]="nuevaReserva.hora" name="hora" required />
+        </div>
+        <br>
+        <button type="submit" class="primary-button navbar-item">Reservar</button>
+    </form>
+</div>
+
+<div class="section">
+    <h2 class="call-to-action">Tus Reservas</h2>
+
+    <ng-container *ngIf="reservas.length > 0; else sinReservas">
+        <ul>
+            <li *ngFor="let reserva of reservas" class="card pista-card">
+                <p><strong>Pista:</strong> {{ reserva.pista.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ reserva.fecha | date: 'fullDate' }}</p>
+                <p><strong>Hora:</strong> {{ reserva.hora }}</p>
+                <p><strong>Estado:</strong>
+                    <span [ngClass]="{
+              'text-success': reserva.estado === 'confirmada',
+              'text-muted': reserva.estado === 'completada',
+              'text-danger': reserva.estado === 'cancelada'
+            }">
+                        {{ reserva.estado }}
+                    </span>
+                </p>
+
+            </li>
+        </ul>
+    </ng-container>
+
+    <ng-template #sinReservas>
+        <p>No tienes reservas actualmente.</p>
+    </ng-template>
+</div>

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Reserva } from '../models/Reserva';
 import { Observable } from 'rxjs';
+import { Reserva } from '../models/Reserva';
+import { ReservaFormData } from '../models/ReservaFormData';
 
 @Injectable({
   providedIn: 'root'
@@ -21,22 +22,21 @@ export class ReservaService {
     });
   }
 
-  createReserva(reserva: Reserva): Observable<Reserva> {
+  createReserva(reserva: ReservaFormData): Observable<Reserva> {
     return this.http.post<Reserva>(this.apiUrl, reserva, {
       withCredentials: true
     });
   }
 
-  cancelarReserva(id: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}${id}/`, { estado: 'cancelada' }, {
+  cancelarReserva(id: number): Observable<Reserva> {
+    return this.http.patch<Reserva>(`${this.apiUrl}${id}/`, { estado: 'cancelada' }, {
       withCredentials: true
     });
   }
 
   getReservasDelUsuarioActual(): Observable<Reserva[]> {
-  return this.http.get<Reserva[]>('http://localhost:8000/reservas/mis-reservas/', {
-    withCredentials: true
-  });
-}
-
+    return this.http.get<Reserva[]>(`${this.apiUrl}mis-reservas/`, {
+      withCredentials: true
+    });
+  }
 }

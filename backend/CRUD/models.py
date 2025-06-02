@@ -168,28 +168,28 @@ class Reserva(models.Model):
     def clean(self):
         if self.fecha < timezone.now().date():
             raise ValidationError('No se pueden hacer reservas en fechas pasadas')
+
         if not self.usuario.membresia_activa and self.estado == 'confirmada':
             raise ValidationError('El usuario debe tener una membresía activa para reservar')
 
-        reservas_dia = Reserva.objects.filter(
+        # 🔐 Controlar máximo 2 reservas activas (confirmadas), sin importar la fecha
+        reservas_activas = Reserva.objects.filter(
             usuario=self.usuario,
-            fecha=self.fecha,
             estado='confirmada'
-        ).count()
-
+        )
         if self.pk:
-            reservas_dia = reservas_dia - 1
+            reservas_activas = reservas_activas.exclude(pk=self.pk)
 
-        if reservas_dia >= 2:
-            raise ValidationError('Has alcanzado el límite de reservas para este día')
+        if reservas_activas.count() >= 2:
+            raise ValidationError('Ya tienes 2 reservas activas. Cancela alguna para hacer otra.')
 
     def save(self, *args, **kwargs):
         self.full_clean()
 
+        # ⚙️ Marcar como completada si han pasado 20 minutos
         if self.estado == 'confirmada':
             now = timezone.now()
-            reserva_datetime = datetime.combine(self.fecha, self.hora)
-            reserva_datetime = timezone.make_aware(reserva_datetime)
+            reserva_datetime = timezone.make_aware(datetime.combine(self.fecha, self.hora))
 
             if now >= reserva_datetime + timedelta(minutes=20):
                 self.estado = 'completada'
@@ -198,4 +198,3 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"{self.fecha} {self.hora} - {self.usuario.username}"
-

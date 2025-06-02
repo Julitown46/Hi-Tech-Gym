@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers, permissions, generics
 from .models import Usuario, Membresia, Pista, Reserva
 from datetime import date, timedelta
@@ -46,17 +47,28 @@ class PistaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReservaSerializer(serializers.ModelSerializer):
+    pista = serializers.PrimaryKeyRelatedField(queryset=Pista.objects.filter(activa=True))
+
     class Meta:
         model = Reserva
         fields = '__all__'
-        depth = 1
+        read_only_fields = ['usuario']
 
     def validate(self, data):
-        usuario = data.get('usuario')
-        fecha = data.get('fecha')
+        request = self.context.get('request')
+        if not request or not hasattr(request, 'user'):
+            raise serializers.ValidationError("No se ha proporcionado un usuario autenticado.")
 
-        # Check membership
+        usuario = request.user
+        fecha = data.get('fecha')
+        hora = data.get('hora')
+        pista = data.get('pista')
+
+        if not pista or not fecha or not hora:
+            raise serializers.ValidationError("Faltan campos obligatorios (pista, fecha u hora)")
+
         hoy = date.today()
+
         membresia_valida = Membresia.objects.filter(
             usuario=usuario,
             fecha_inicio__lte=hoy,
@@ -69,23 +81,23 @@ class ReservaSerializer(serializers.ModelSerializer):
         if fecha < hoy:
             raise serializers.ValidationError("No se pueden hacer reservas para fechas pasadas")
 
-        reservas_dia = Reserva.objects.filter(
+        reservas_activas = Reserva.objects.filter(
             usuario=usuario,
-            fecha=fecha,
             estado='confirmada'
         ).count()
 
-        if reservas_dia >= 2:
-            raise serializers.ValidationError("Has alcanzado el límite de reservas para este día")
+        if reservas_activas >= 2:
+            raise serializers.ValidationError("Ya tienes 2 reservas activas. Cancela alguna para poder hacer otra.")
 
         if Reserva.objects.filter(
-                pista=data['pista'],
+                pista=pista,
                 fecha=fecha,
-                hora=data['hora']
+                hora=hora
         ).exists():
             raise serializers.ValidationError("Ya existe una reserva para esta pista en esta fecha y hora")
 
         return data
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

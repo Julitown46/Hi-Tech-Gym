@@ -58,7 +58,11 @@ class PistaViewSet(viewsets.ModelViewSet):
 class ReservaViewSet(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaSerializer
-    permission_classes = [ReservaPermission]
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
 
 class LoginView(APIView):
     serializer_class = LoginSerializer
@@ -94,6 +98,6 @@ class MisReservasView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        reservas = Reserva.objects.filter(usuario=request.user, estado='confirmada')
+        reservas = Reserva.objects.filter(usuario=request.user).order_by('-fecha', '-hora')
         serializer = ReservaSerializer(reservas, many=True)
         return Response(serializer.data)
