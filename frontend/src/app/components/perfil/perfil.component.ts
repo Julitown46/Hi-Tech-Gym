@@ -10,6 +10,8 @@ import { ToastService } from '../../services/toast.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MembresiaService } from '../../services/membresia.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -30,6 +32,11 @@ export class PerfilComponent implements OnInit {
   reservas: Reserva[] = [];
   error: string | null = null;
 
+  constructor(
+    private router: Router,
+    private location: Location,
+  ) { }
+
   ngOnInit(): void {
     const usuario = this.loginService.getUsuarioLogueado();
     console.log('Usuario cargado desde LoginService:', usuario);
@@ -44,6 +51,12 @@ export class PerfilComponent implements OnInit {
     this.reservaService.getReservasDelUsuarioActual().subscribe(reservas => {
       this.reservas = reservas;
     });
+
+    const state = this.location.getState() as { membresiaActivada?: boolean };
+
+    if (state?.membresiaActivada) {
+      this.toastService.showMessage('¡Membresía activada correctamente!');
+    }
   }
 
 
@@ -92,11 +105,12 @@ export class PerfilComponent implements OnInit {
         })
       );
 
-      this.toastService.showMessage('¡Membresía activada correctamente!');
       const actualizado = { ...this.usuario!, membresia_activa: true };
       this.loginService.setUsuarioLogueado(actualizado);
       this.usuario = actualizado;
-
+      this.router.navigate(['/pago'], {
+        state: { membresiaActivada: true }
+      });
     } catch (err) {
       console.error('Error al activar membresía:', err);
       this.toastService.showMessage('No se pudo activar la membresía.');

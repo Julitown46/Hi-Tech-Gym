@@ -34,17 +34,17 @@
     </div>
 
     <div class="info-block">
-<br>
-<br>
-      <label for="filtro">Filtrar por estado: </label>
-      <select id="filtro" [(ngModel)]="filtroEstado">
-        <option value="todas">Todas</option>
-        <option value="confirmada">Confirmadas</option>
-        <option value="completada">Completadas</option>
-        <option value="cancelada">Canceladas</option>
-      </select>
+      <br>
+      <br>
 
       <div *ngIf="reservas.length > 0; else noReservas">
+        <label for="filtro">Filtrar por estado: </label>
+        <select id="filtro" [(ngModel)]="filtroEstado">
+          <option value="todas">Todas</option>
+          <option value="confirmada">Confirmadas</option>
+          <option value="completada">Completadas</option>
+          <option value="cancelada">Canceladas</option>
+        </select>
         <h3 class="call-to-action">Reservas</h3>
         <ul>
           <li *ngFor="let reserva of reservasFiltradas">
