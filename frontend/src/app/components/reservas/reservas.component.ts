@@ -23,7 +23,7 @@ export class ReservasComponent implements OnInit {
   pistas: Pista[] = [];
 
   nuevaReserva: ReservaFormData = {
-    pista: null,
+    pista_id: null,
     fecha: '',
     hora: ''
   };
@@ -62,7 +62,7 @@ export class ReservasComponent implements OnInit {
 
   async crearReserva(): Promise<void> {
     if (
-      this.nuevaReserva.pista === null ||
+      this.nuevaReserva.pista_id === null ||
       !this.nuevaReserva.fecha ||
       !this.nuevaReserva.hora
     ) {
@@ -90,7 +90,7 @@ console.log('Reserva a enviar:', this.nuevaReserva);
 
       this.reservas.push(nueva);
       this.toastService.showMessage('Reserva creada correctamente');
-      this.nuevaReserva = { pista: 0, fecha: '', hora: '' };
+      this.nuevaReserva = { pista_id: 0, fecha: '', hora: '' };
 
     } catch (error: any) {
       console.error('Error al crear reserva', error);

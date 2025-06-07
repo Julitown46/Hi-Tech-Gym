@@ -1,5 +1,5 @@
 export type ReservaFormData = {
-  pista: number | null;
+  pista_id: number | null;
   fecha: string;
   hora: string;
 };

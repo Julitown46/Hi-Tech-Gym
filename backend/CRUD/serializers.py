@@ -47,11 +47,14 @@ class PistaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReservaSerializer(serializers.ModelSerializer):
-    pista = serializers.PrimaryKeyRelatedField(queryset=Pista.objects.filter(activa=True))
+    pista = PistaSerializer(read_only=True)  # Para mostrar nombre en el frontend
+    pista_id = serializers.PrimaryKeyRelatedField(
+        queryset=Pista.objects.filter(activa=True), source='pista', write_only=True
+    )
 
     class Meta:
         model = Reserva
-        fields = '__all__'
+        fields = ['id', 'pista', 'pista_id', 'fecha', 'hora', 'estado', 'usuario']
         read_only_fields = ['usuario']
 
     def validate(self, data):
