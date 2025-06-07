@@ -172,21 +172,20 @@ class Reserva(models.Model):
         if not self.usuario.membresia_activa and self.estado == 'confirmada':
             raise ValidationError('El usuario debe tener una membresía activa para reservar')
 
-        # 🔐 Controlar máximo 2 reservas activas (confirmadas), sin importar la fecha
-        reservas_activas = Reserva.objects.filter(
-            usuario=self.usuario,
-            estado='confirmada'
-        )
-        if self.pk:
-            reservas_activas = reservas_activas.exclude(pk=self.pk)
+        if self.estado == 'confirmada':
+            reservas_activas = Reserva.objects.filter(
+                usuario=self.usuario,
+                estado='confirmada'
+            )
+            if self.pk:
+                reservas_activas = reservas_activas.exclude(pk=self.pk)
 
-        if reservas_activas.count() >= 2:
-            raise ValidationError('Ya tienes 2 reservas activas. Cancela alguna para hacer otra.')
+            if reservas_activas.count() >= 2:
+                raise ValidationError('Ya tienes 2 reservas activas. Cancela alguna para hacer otra.')
 
     def save(self, *args, **kwargs):
         self.full_clean()
 
-        # ⚙️ Marcar como completada si han pasado 20 minutos
         if self.estado == 'confirmada':
             now = timezone.now()
             reserva_datetime = timezone.make_aware(datetime.combine(self.fecha, self.hora))
