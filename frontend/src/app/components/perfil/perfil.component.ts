@@ -9,12 +9,13 @@ import { firstValueFrom, of } from 'rxjs';
 import { ToastService } from '../../services/toast.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MembresiaService } from '../../services/membresia.service';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './perfil.component.html'
 })
 export class PerfilComponent implements OnInit {
@@ -63,7 +64,7 @@ export class PerfilComponent implements OnInit {
         return of([]);
       })
     ).subscribe(reservas => {
-      this.reservas = reservas.filter(r => r.estado === 'confirmada');
+      this.reservas = reservas;
     });
   }
 
@@ -143,5 +144,12 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  filtroEstado: string = 'todas';
 
+  get reservasFiltradas() {
+    if (this.filtroEstado === 'todas') {
+      return this.reservas;
+    }
+    return this.reservas.filter(r => r.estado === this.filtroEstado);
+  }
 }

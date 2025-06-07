@@ -34,15 +34,33 @@
     </div>
 
     <div class="info-block">
+<br>
+<br>
+      <label for="filtro">Filtrar por estado: </label>
+      <select id="filtro" [(ngModel)]="filtroEstado">
+        <option value="todas">Todas</option>
+        <option value="confirmada">Confirmadas</option>
+        <option value="completada">Completadas</option>
+        <option value="cancelada">Canceladas</option>
+      </select>
 
       <div *ngIf="reservas.length > 0; else noReservas">
-        <h3 class="call-to-action">Reservas Confirmadas</h3>
+        <h3 class="call-to-action">Reservas</h3>
         <ul>
-          <li *ngFor="let reserva of reservas">
+          <li *ngFor="let reserva of reservasFiltradas">
             <div class="card pista-card">
               <p><strong>Pista:</strong> {{ reserva.pista.nombre }}</p>
               <p><strong>Fecha:</strong> {{ reserva.fecha | date:'fullDate' }}</p>
               <p><strong>Hora:</strong> {{ reserva.hora }}</p>
+              <p><strong>Estado:</strong>
+                <span [ngClass]="{
+        'text-success': reserva.estado === 'confirmada',
+        'text-muted': reserva.estado === 'completada',
+        'text-danger': reserva.estado === 'cancelada'
+      }">
+                  {{ reserva.estado }}
+                </span>
+              </p>
             </div>
           </li>
         </ul>
