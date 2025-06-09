@@ -24,31 +24,3 @@
         <button type="submit" class="primary-button navbar-item">Reservar</button>
     </form>
 </div>
-
-<div class="section">
-    <h2 class="call-to-action">Tus Reservas</h2>
-
-    <ng-container *ngIf="reservas.length > 0; else sinReservas">
-        <ul>
-            <li *ngFor="let reserva of reservas" class="card pista-card">
-                <p><strong>Pista:</strong> {{ reserva.pista.nombre }}</p>
-                <p><strong>Fecha:</strong> {{ reserva.fecha | date: 'fullDate' }}</p>
-                <p><strong>Hora:</strong> {{ reserva.hora }}</p>
-                <p><strong>Estado:</strong>
-                    <span [ngClass]="{
-              'text-success': reserva.estado === 'confirmada',
-              'text-muted': reserva.estado === 'completada',
-              'text-danger': reserva.estado === 'cancelada'
-            }">
-                        {{ reserva.estado }}
-                    </span>
-                </p>
-
-            </li>
-        </ul>
-    </ng-container>
-
-    <ng-template #sinReservas>
-        <p>No tienes reservas actualmente.</p>
-    </ng-template>
-</div>

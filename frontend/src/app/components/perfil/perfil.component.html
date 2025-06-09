@@ -45,7 +45,7 @@
           <option value="completada">Completadas</option>
           <option value="cancelada">Canceladas</option>
         </select>
-        <h3 class="call-to-action">Reservas</h3>
+        <h3 class="call-to-action">Tus Reservas</h3>
         <ul>
           <li *ngFor="let reserva of reservasFiltradas">
             <div class="card pista-card">
@@ -53,11 +53,7 @@
               <p><strong>Fecha:</strong> {{ reserva.fecha | date:'fullDate' }}</p>
               <p><strong>Hora:</strong> {{ reserva.hora }}</p>
               <p><strong>Estado:</strong>
-                <span [ngClass]="{
-        'text-success': reserva.estado === 'confirmada',
-        'text-muted': reserva.estado === 'completada',
-        'text-danger': reserva.estado === 'cancelada'
-      }">
+                <span>
                   {{ reserva.estado }}
                 </span>
               </p>
