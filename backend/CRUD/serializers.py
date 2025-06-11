@@ -72,6 +72,9 @@ class ReservaSerializer(serializers.ModelSerializer):
 
         hoy = date.today()
 
+        if not (8 <= hora.hour <= 20) or hora.minute not in (0, 30):
+            raise serializers.ValidationError("La hora debe estar entre las 08:00 y las 20:00, y solo a las en punto o y media.")
+
         membresia_valida = Membresia.objects.filter(
             usuario=usuario,
             fecha_inicio__lte=hoy,

@@ -18,7 +18,10 @@
 
         <div>
             <label for="hora">Hora: </label>
-            <input type="time" id="hora" [(ngModel)]="nuevaReserva.hora" name="hora" required />
+            <select id="hora" [(ngModel)]="nuevaReserva.hora" name="hora" required>
+                <option value="" disabled selected>Selecciona una hora</option>
+                <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
+            </select>
         </div>
         <br>
         <button type="submit" class="primary-button navbar-item">Reservar</button>
