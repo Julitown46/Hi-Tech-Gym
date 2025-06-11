@@ -101,3 +101,22 @@ class MisReservasView(APIView):
         reservas = Reserva.objects.filter(usuario=request.user).order_by('-fecha', '-hora')
         serializer = ReservaSerializer(reservas, many=True)
         return Response(serializer.data)
+
+class ReservasConfirmadasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        pista_id = request.GET.get('pista')
+        fecha = request.GET.get('fecha')
+
+        if not pista_id or not fecha:
+            return Response({'detail': 'Parámetros pista y fecha requeridos.'}, status=400)
+
+        reservas = Reserva.objects.filter(
+            pista_id=pista_id,
+            fecha=fecha,
+            estado='confirmada'
+        ).order_by('hora')
+
+        horas_ocupadas = [r.hora.strftime('%H:%M') for r in reservas]
+        return Response(horas_ocupadas)

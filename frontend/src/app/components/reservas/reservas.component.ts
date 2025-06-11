@@ -38,6 +38,7 @@ export class ReservasComponent implements OnInit {
   ngOnInit(): void {
     this.cargarReservas();
     this.cargarPistas();
+    this.horasDisponibles = [];
   }
 
   cargarReservas(): void {
@@ -76,7 +77,7 @@ export class ReservasComponent implements OnInit {
       const headers = new HttpHeaders({
         'X-CSRFToken': csrfToken
       });
-console.log('Reserva a enviar:', this.nuevaReserva);
+      console.log('Reserva a enviar:', this.nuevaReserva);
       const nueva = await firstValueFrom(
         this.http.post<Reserva>(
           'http://localhost:8000/reservas/',
@@ -103,5 +104,42 @@ console.log('Reserva a enviar:', this.nuevaReserva);
         this.toastService.showMessage('No se pudo crear la reserva');
       }
     }
+  }
+
+  horasDisponibles: string[] = [];
+
+  async actualizarHorasDisponibles(): Promise<void> {
+    const { pista_id, fecha } = this.nuevaReserva;
+
+    if (!pista_id || !fecha) {
+      this.horasDisponibles = [];
+      return;
+    }
+
+    try {
+      const todasLasHoras: string[] = [];
+      for (let hora = 8; hora <= 20; hora++) {
+        todasLasHoras.push(this.formatearHora(hora, 0));
+        if (hora !== 20) todasLasHoras.push(this.formatearHora(hora, 30));
+      }
+
+      const horasOcupadas: string[] = await firstValueFrom(
+        this.reservaService.getReservasConfirmadas(pista_id, fecha)
+      );
+
+      // filtra las horas disponibles
+      this.horasDisponibles = todasLasHoras.filter(
+        hora => !horasOcupadas.includes(hora)
+      );
+    } catch (error) {
+      console.error('Error al actualizar horas disponibles:', error);
+      this.toastService.showMessage('No se pudieron cargar las horas disponibles');
+      this.horasDisponibles = [];
+    }
+  }
+  formatearHora(hora: number, minutos: number): string {
+    const h = hora.toString().padStart(2, '0');
+    const m = minutos.toString().padStart(2, '0');
+    return `${h}:${m}`;
   }
 }

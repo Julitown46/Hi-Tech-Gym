@@ -4,7 +4,8 @@
     <form (ngSubmit)="crearReserva()" class="card">
         <div>
             <label for="pista">Pista:</label>
-            <select id="pista" [(ngModel)]="nuevaReserva.pista_id" name="pista" required>
+            <select id="pista" [(ngModel)]="nuevaReserva.pista_id" name="pista" required
+                (change)="actualizarHorasDisponibles()">
                 <option [ngValue]="null" disabled selected>Selecciona una pista</option>
                 <option *ngFor="let pista of pistas" [ngValue]="pista.id">{{ pista.nombre }}</option>
             </select>
@@ -13,7 +14,8 @@
 
         <div>
             <label for="fecha">Fecha: </label>
-            <input type="date" id="fecha" [(ngModel)]="nuevaReserva.fecha" name="fecha" required />
+            <input type="date" id="fecha" [(ngModel)]="nuevaReserva.fecha" name="fecha" required
+                (change)="actualizarHorasDisponibles()" />
         </div>
 
         <div>
