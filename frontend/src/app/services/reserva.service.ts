@@ -39,4 +39,11 @@ export class ReservaService {
       withCredentials: true
     });
   }
+
+getReservasConfirmadas(pista_id: number, fecha: string) {
+  return this.http.get<string[]>(
+    `http://localhost:8000/reservas/confirmadas/?pista=${pista_id}&fecha=${fecha}`,
+    { withCredentials: true }
+  );
+}
 }
