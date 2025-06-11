@@ -1,0 +1,20 @@
+.hora-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
+}
+.hora-buttons button {
+  min-width: 80px;
+}
+
+.pista-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 5px;
+}
+.pista-buttons button {
+  min-width: 100px;
+  text-align: center;
+}

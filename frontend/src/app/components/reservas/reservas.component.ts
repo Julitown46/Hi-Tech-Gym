@@ -127,7 +127,6 @@ export class ReservasComponent implements OnInit {
         this.reservaService.getReservasConfirmadas(pista_id, fecha)
       );
 
-      // filtra las horas disponibles
       this.horasDisponibles = todasLasHoras.filter(
         hora => !horasOcupadas.includes(hora)
       );
@@ -142,4 +141,15 @@ export class ReservasComponent implements OnInit {
     const m = minutos.toString().padStart(2, '0');
     return `${h}:${m}`;
   }
+
+  seleccionarHora(hora: string): void {
+    this.nuevaReserva.hora = hora;
+  }
+
+  seleccionarPista(pistaId: number): void {
+    this.nuevaReserva.pista_id = pistaId;
+    this.actualizarHorasDisponibles();
+  }
+
+
 }

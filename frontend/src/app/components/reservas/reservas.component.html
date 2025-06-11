@@ -3,13 +3,15 @@
 
     <form (ngSubmit)="crearReserva()" class="card">
         <div>
-            <label for="pista">Pista:</label>
-            <select id="pista" [(ngModel)]="nuevaReserva.pista_id" name="pista" required
-                (change)="actualizarHorasDisponibles()">
-                <option [ngValue]="null" disabled selected>Selecciona una pista</option>
-                <option *ngFor="let pista of pistas" [ngValue]="pista.id">{{ pista.nombre }}</option>
-            </select>
-
+            <label>Pista:</label>
+            <div class="pista-buttons">
+                <button type="button" class="navbar-item" *ngFor="let pista of pistas" [ngClass]="{
+        'primary-button': nuevaReserva.pista_id === pista.id,
+        'secondary-button': nuevaReserva.pista_id !== pista.id
+      }" (click)="seleccionarPista(pista.id)">
+                    {{ pista.nombre }}
+                </button>
+            </div>
         </div>
 
         <div>
@@ -19,13 +21,17 @@
         </div>
 
         <div>
-            <label for="hora">Hora: </label>
-            <select id="hora" [(ngModel)]="nuevaReserva.hora" name="hora" required>
-                <option value="" disabled selected>Selecciona una hora</option>
-                <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
-            </select>
+            <label>Hora:</label>
+            <div class="hora-buttons">
+                <button type="button" class="navbar-item" *ngFor="let hora of horasDisponibles" [ngClass]="{
+              'primary-button': nuevaReserva.hora === hora,
+              'secondary-button': nuevaReserva.hora !== hora
+            }" (click)="seleccionarHora(hora)">
+                    {{ hora }}
+                </button>
+            </div>
         </div>
         <br>
-        <button type="submit" class="primary-button navbar-item">Reservar</button>
+        <button type="submit" class="primary-button navbar-item" style="width: 250px;display: block; margin: 0 auto;">Reservar</button>
     </form>
 </div>
