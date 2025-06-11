@@ -28,6 +28,8 @@ export class ReservasComponent implements OnInit {
     hora: ''
   };
 
+  fechaMinima: string = '';
+
   constructor(
     private reservaService: ReservaService,
     private csrfService: CsrfService,
@@ -36,6 +38,7 @@ export class ReservasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.establecerFechaMinima();
     this.cargarReservas();
     this.cargarPistas();
     this.horasDisponibles = [];
@@ -151,5 +154,11 @@ export class ReservasComponent implements OnInit {
     this.actualizarHorasDisponibles();
   }
 
-
+  establecerFechaMinima(): void {
+    const hoy = new Date();
+    const año = hoy.getFullYear();
+    const mes = (hoy.getMonth() + 1).toString().padStart(2, '0');
+    const dia = hoy.getDate().toString().padStart(2, '0');
+    this.fechaMinima = `${año}-${mes}-${dia}`;
+  }
 }

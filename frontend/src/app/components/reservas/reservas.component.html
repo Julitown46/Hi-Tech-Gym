@@ -17,7 +17,8 @@
         <div>
             <label for="fecha">Fecha: </label>
             <input type="date" id="fecha" [(ngModel)]="nuevaReserva.fecha" name="fecha" required
-                (change)="actualizarHorasDisponibles()" />
+                (change)="actualizarHorasDisponibles()" [attr.min]="fechaMinima" />
+
         </div>
 
         <div>
@@ -32,6 +33,7 @@
             </div>
         </div>
         <br>
-        <button type="submit" class="primary-button navbar-item" style="width: 250px;display: block; margin: 0 auto;">Reservar</button>
+        <button type="submit" class="primary-button navbar-item"
+            style="width: 250px;display: block; margin: 0 auto;">Reservar</button>
     </form>
 </div>
