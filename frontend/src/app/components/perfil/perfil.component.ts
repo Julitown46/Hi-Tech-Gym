@@ -149,8 +149,6 @@ export class PerfilComponent implements OnInit {
       this.loginService.setUsuarioLogueado(actualizado);
       this.usuario = actualizado;
 
-      this.reservas = [];
-
       this.toastService.showMessage('Membresía cancelada con éxito.');
     } catch (error) {
       console.error('Error al cancelar la membresía:', error);

@@ -94,7 +94,8 @@ export class ReservasComponent implements OnInit {
 
       this.reservas.push(nueva);
       this.toastService.showMessage('Reserva creada correctamente');
-      this.nuevaReserva = { pista_id: 0, fecha: '', hora: '' };
+      this.reiniciarFormulario();
+      this.cargarReservas();
 
     } catch (error: any) {
       console.error('Error al crear reserva', error);
@@ -161,4 +162,13 @@ export class ReservasComponent implements OnInit {
     const dia = hoy.getDate().toString().padStart(2, '0');
     this.fechaMinima = `${año}-${mes}-${dia}`;
   }
+
+  reiniciarFormulario(): void {
+  this.nuevaReserva = {
+    pista_id: null,
+    fecha: '',
+    hora: ''
+  };
+  this.horasDisponibles = [];
+}
 }
